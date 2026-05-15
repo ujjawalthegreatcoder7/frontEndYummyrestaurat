@@ -591,10 +591,10 @@ export default function Checkout() {
     }
 
     // OTP verification disabled temporarily
-    if (!verified) {
-      alert("Please verify phone first");
-      return;
-    }
+    // if (!verified) {
+    //   alert("Please verify phone first");
+    //   return;
+    // }
 
     try {
       setLoading(true);
@@ -606,8 +606,8 @@ export default function Checkout() {
       };
 
       const res = await axios.post(
-        `${BASE_URL}/place-order`,
-        // "http://localhost:5000/place-order",
+        // `${BASE_URL}/place-order`,
+        "http://localhost:5000/place-order",
         orderData
       );
 
