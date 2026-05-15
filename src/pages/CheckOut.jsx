@@ -591,10 +591,10 @@ export default function Checkout() {
     }
 
     // OTP verification disabled temporarily
-    // if (!verified) {
-    //   alert("Please verify phone first");
-    //   return;
-    // }
+    if (!verified) {
+      alert("Please verify phone first");
+      return;
+    }
 
     try {
       setLoading(true);
