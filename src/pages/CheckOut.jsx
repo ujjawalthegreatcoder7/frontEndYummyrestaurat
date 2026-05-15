@@ -4,6 +4,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./pages.css";
 
+const BASE_URL = "https://final-restaurant-backend-1.onrender.com";
+
 export default function Checkout() {
   const { cartItems, setCartItems } = useContext(CartContext);
   const navigate = useNavigate();
@@ -32,7 +34,7 @@ export default function Checkout() {
   };
 
   /* =========================
-     SEND OTP (BACKEND)
+     SEND OTP
   ========================= */
   const sendOTP = async () => {
     if (!formData.phone || formData.phone.length < 10) {
@@ -43,23 +45,23 @@ export default function Checkout() {
     try {
       setLoading(true);
 
-      await axios.post("http://localhost:5000/send-otp", {
+      await axios.post(`${BASE_URL}/send-otp`, {
         phone: formData.phone,
       });
 
       setOtpSent(true);
-      alert("OTP sent successfully to your phone");
+      alert("OTP sent successfully");
 
     } catch (error) {
       console.log(error);
-      alert("Failed to send OTP");
+      alert(error.response?.data?.message || "Failed to send OTP");
     } finally {
       setLoading(false);
     }
   };
 
   /* =========================
-     VERIFY OTP (BACKEND)
+     VERIFY OTP
   ========================= */
   const verifyOTP = async () => {
     if (!enteredOTP) {
@@ -70,22 +72,17 @@ export default function Checkout() {
     try {
       setLoading(true);
 
-      const res = await axios.post(
-        "http://localhost:5000/verify-otp",
-        {
-          phone: formData.phone,
-          otp: enteredOTP,
-        }
-      );
+      const res = await axios.post(`${BASE_URL}/verify-otp`, {
+        phone: formData.phone,
+        otp: enteredOTP,
+      });
 
       setVerified(true);
       alert(res.data.message);
 
     } catch (error) {
       console.log(error);
-      alert(
-        error.response?.data?.message || "OTP verification failed"
-      );
+      alert(error.response?.data?.message || "OTP verification failed");
     } finally {
       setLoading(false);
     }
@@ -116,24 +113,18 @@ export default function Checkout() {
         totalPrice,
       };
 
-      const res = await axios.post(
-        "https://final-restaurant-backend-2.onrender.com/place-order",
-        orderData
-      );
+      await axios.post(`${BASE_URL}/place-order`, orderData);
 
       alert("Order placed successfully");
-      navigate("/");
-      window.location.reload();
 
-localStorage.removeItem("cartItems");
-setCartItems([]);
       setCartItems([]);
       localStorage.removeItem("cartItems");
+
       navigate("/Home");
 
     } catch (error) {
       console.log(error);
-      alert("Order failed");
+      alert(error.response?.data?.message || "Order failed");
     } finally {
       setLoading(false);
     }
@@ -165,7 +156,6 @@ setCartItems([]);
             required
           />
 
-          {/* SEND OTP */}
           <button
             type="button"
             onClick={sendOTP}
@@ -175,16 +165,13 @@ setCartItems([]);
             Send OTP
           </button>
 
-          {/* OTP INPUT */}
           {otpSent && (
             <>
               <input
                 type="text"
                 placeholder="Enter OTP"
                 value={enteredOTP}
-                onChange={(e) =>
-                  setEnteredOTP(e.target.value)
-                }
+                onChange={(e) => setEnteredOTP(e.target.value)}
               />
 
               <button
@@ -213,7 +200,6 @@ setCartItems([]);
             required
           />
 
-          {/* ORDER SUMMARY */}
           <div>
             <h3>Order Summary</h3>
 
