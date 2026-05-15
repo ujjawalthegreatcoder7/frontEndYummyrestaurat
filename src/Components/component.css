@@ -1,0 +1,280 @@
+/* Footer */
+
+.custom-footer {
+  background-color: #374151;
+  color: #ffffff;
+  padding: 60px 40px 30px;
+  font-family: Arial, sans-serif;
+  border-top: 1px solid #e5e7eb;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  align-items: start;
+}
+
+.footer-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.footer-icon {
+  font-size: 32px;
+  color: red;
+  margin-top: 5px;
+}
+
+.footer-box h4 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.footer-box p {
+  margin: 4px 0;
+  color: #ffffff;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.social-icons {
+  display: flex;
+  gap: 14px;
+  margin-top: 15px;
+}
+
+.social-icons a {
+  width: 48px;
+  height: 48px;
+  border: 1px solid #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 20px;
+  transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+  background-color: red;
+  color: white;
+  border-color: red;
+}
+
+.custom-footer hr {
+  margin: 45px 0 30px;
+  border: none;
+  border-top: 1px solid #ffffff;
+}
+
+.footer-bottom {
+  text-align: center;
+}
+
+.footer-bottom p {
+  margin: 8px 0;
+  font-size: 18px;
+  color: #ffffff;
+}
+
+.footer-bottom span {
+  color: red;
+  font-weight: 600;
+}
+
+/* =========================
+   PROFESSIONAL NAVBAR (FIXED)
+========================= */
+
+.navbar {
+  width: 99.3%;
+  background-color: #ffffff;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 14px 5%;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
+  flex-wrap: nowrap; /* IMPORTANT */
+}
+
+/* LOGO */
+.navbar-logo a {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ef4444;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+/* NAV LINKS */
+.navbar-links {
+  display: flex;
+  gap: 1.8rem;
+  align-items: center;
+  justify-content: center;
+
+  flex: 1;
+  overflow: hidden;
+}
+
+.navbar-links a {
+  text-decoration: none;
+  color: #111827;
+  font-size: 1rem;
+  font-weight: 500;
+
+  position: relative;
+  white-space: nowrap;
+  transition: 0.3s ease;
+}
+
+/* underline effect */
+.navbar-links a::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  left: 0;
+  bottom: -4px;
+  background-color: #ef4444;
+  transition: 0.3s ease;
+}
+
+.navbar-links a:hover {
+  color: #ef4444;
+}
+
+.navbar-links a:hover::after {
+  width: 100%;
+}
+
+/* CART WRAPPER */
+.navbar-cart {
+  position: relative;   /* 🔥 IMPORTANT FIX */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* CART ICON */
+.cart-link {
+  font-size: 1.8rem;
+  color: #111827;
+  text-decoration: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+  transition: 0.3s;
+}
+
+.cart-link:hover {
+  color: #ef4444;
+}
+
+/* CART BADGE (COUNT) */
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+
+  background: #ef4444;
+  color: white;
+
+  font-size: 0.7rem;
+  font-weight: bold;
+
+  padding: 3px 6px;
+  border-radius: 50%;
+  min-width: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 992px) {
+  .navbar-links {
+    gap: 1rem;
+  }
+
+  .navbar-logo a {
+    font-size: 1.7rem;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+  .navbar {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px 15px;
+  }
+
+  .navbar-links {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    gap: 0.8rem;
+  }
+
+  .navbar-cart {
+    order: 2;
+  }
+
+  .navbar-logo {
+    order: 1;
+  }
+
+  .navbar-links a {
+    font-size: 0.9rem;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 480px) {
+
+  .navbar-logo a {
+    font-size: 1.4rem;
+  }
+
+  .navbar-links a {
+    font-size: 0.8rem;
+  }
+
+  .cart-link {
+    font-size: 1.6rem;
+  }
+
+  .cart-badge {
+    font-size: 0.6rem;
+  }
+}
