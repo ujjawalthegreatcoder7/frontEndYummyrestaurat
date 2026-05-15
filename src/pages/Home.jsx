@@ -10,7 +10,7 @@ const Home = () => {
                 <div className="top">
                     <div>
                         <div>
-                            <b>Enjoy Your Healthy Delicious Food</b>
+                            <b>Enjoy Your Healthy Delicious </b>
                         </div>
 
                         <div>
