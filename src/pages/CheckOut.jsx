@@ -117,7 +117,7 @@ export default function Checkout() {
       };
 
       const res = await axios.post(
-        "http://localhost:5000/place-order",
+        "https://final-restaurant-backend-2.onrender.com/place-order",
         orderData
       );
 
