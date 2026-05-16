@@ -9,11 +9,13 @@ import "./pages.css";
 
 /* Cart Context */
 import { CartContext } from "../Context/context";
+import Skeleton from "@mui/material/Skeleton";
+import CartSkeleton from "./skeleton";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
-  return (
+  return ( 
     <div
       role="tabpanel"
       hidden={value !== index}
@@ -128,7 +130,9 @@ export default function Menu() {
           </div>
         ))
       ) : (
-        <p>No items available in this category.</p>
+        <div className="skeleton" >
+        <CartSkeleton/>
+        </div>
       )}
     </div>
   );
