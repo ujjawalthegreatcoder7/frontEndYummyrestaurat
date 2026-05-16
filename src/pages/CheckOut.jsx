@@ -694,6 +694,14 @@ export default function Checkout() {
             onChange={handleChange}
             required
           />
+          <input
+            // type="number"
+            name="AdditionalInformation"
+            placeholder="Additional Information"
+            value={formData.AdditionalInformation}
+            onChange={handleChange}
+            
+          /> 
 
           <div>
             <h3>Order Summary</h3>

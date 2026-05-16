@@ -1,9 +1,9 @@
 import { createContext, useState, useEffect } from "react";
-import "./context.css"
+import "./context.css";
+
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-
   /* LOAD CART FROM LOCAL STORAGE */
   const [cartItems, setCartItems] = useState(() => {
     const savedCart = localStorage.getItem("cartItems");
@@ -15,7 +15,7 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // Add item
+  /* ADD ITEM */
   const addToCart = (item) => {
     const existingItem = cartItems.find(
       (cartItem) => cartItem._id === item._id
@@ -34,18 +34,42 @@ export const CartProvider = ({ children }) => {
     }
 
     setCartItems(updatedCart);
-
     console.log("Updated Cart:", updatedCart);
   };
 
-  // Remove item
+  /* INCREASE QUANTITY */
+  const increaseQuantity = (id) => {
+    const updatedCart = cartItems.map((item) =>
+      item._id === id
+        ? { ...item, quantity: item.quantity + 1 }
+        : item
+    );
+
+    setCartItems(updatedCart);
+    console.log("Quantity Increased:", updatedCart);
+  };
+
+  /* DECREASE QUANTITY */
+  const decreaseQuantity = (id) => {
+    const updatedCart = cartItems
+      .map((item) =>
+        item._id === id
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      )
+      .filter((item) => item.quantity > 0);
+
+    setCartItems(updatedCart);
+    console.log("Quantity Decreased:", updatedCart);
+  };
+
+  /* REMOVE ITEM */
   const removeFromCart = (id) => {
     const updatedCart = cartItems.filter(
       (item) => item._id !== id
     );
 
     setCartItems(updatedCart);
-
     console.log("Updated Cart After Removal:", updatedCart);
   };
 
@@ -55,6 +79,8 @@ export const CartProvider = ({ children }) => {
         cartItems,
         addToCart,
         removeFromCart,
+        increaseQuantity,
+        decreaseQuantity,
       }}
     >
       {children}

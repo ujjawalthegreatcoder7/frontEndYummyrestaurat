@@ -4,7 +4,12 @@ import { CartContext } from "../Context/context";
 import "./pages.css";
 
 export default function Cart() {
-  const { cartItems, removeFromCart } = useContext(CartContext);
+  const {
+    cartItems,
+    removeFromCart,
+    increaseQuantity,
+    decreaseQuantity,
+  } = useContext(CartContext);
 
   /* Navigation */
   const navigate = useNavigate();
@@ -35,7 +40,24 @@ export default function Cart() {
 
                 <p>Price: ₹{item.price}</p>
 
-                <p>Quantity: {item.quantity}</p>
+                {/* Quantity Controls */}
+                <div className="quantity-controls">
+                  <button
+                    className="qty-btn"
+                    onClick={() => decreaseQuantity(item._id)}
+                  >
+                    -
+                  </button>
+
+                  <span className="quantity">{item.quantity}</span>
+
+                  <button
+                    className="qty-btn"
+                    onClick={() => increaseQuantity(item._id)}
+                  >
+                    +
+                  </button>
+                </div>
 
                 <p>Total: ₹{item.price * item.quantity}</p>
 
