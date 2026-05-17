@@ -9,13 +9,12 @@ import "./pages.css";
 
 /* Cart Context */
 import { CartContext } from "../Context/context";
-import Skeleton from "@mui/material/Skeleton";
 import CartSkeleton from "./skeleton";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
-  return ( 
+  return (
     <div
       role="tabpanel"
       hidden={value !== index}
@@ -49,9 +48,7 @@ export default function Menu() {
 
   useEffect(() => {
     axios
-      // .get("http://localhost:5000/menu")
       .get("https://final-restaurant-backend-1.onrender.com/menu")
-
       .then((res) => {
         setMenuItems(res.data);
         console.log("Menu Data Loaded:", res.data);
@@ -61,8 +58,14 @@ export default function Menu() {
       });
   }, []);
 
+  /* CATEGORY CHANGE + AUTO SCROLL TOP */
   const handleChange = (event, newValue) => {
     setValue(newValue);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   /* ONLY 4 MAIN UI CATEGORIES */
@@ -130,8 +133,8 @@ export default function Menu() {
           </div>
         ))
       ) : (
-        <div className="skeleton" >
-        <CartSkeleton/>
+        <div className="skeleton">
+          <CartSkeleton />
         </div>
       )}
     </div>
