@@ -440,7 +440,7 @@ export default function Checkout() {
   ========================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+ 
     if (cartItems.length === 0) {
       alert("Cart is empty");
       return;
