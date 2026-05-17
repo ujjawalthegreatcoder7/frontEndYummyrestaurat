@@ -21,7 +21,7 @@ const Home = () => {
                         </div>
 
                         <div className="button-group">
-                            <a href="/Menu" className="menu-btn">Order From Menu</a>
+                            <a href="/menu" className="menu-btn">Order From Menu</a>
                                 <a
                                   href="https://api.whatsapp.com/send?phone=919971289376"
                                   target="_blank"
