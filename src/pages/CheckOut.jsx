@@ -120,10 +120,10 @@
 
 //       console.log("SUCCESS:", res.data);
 
-//       alert("Order placed successfully");
-//       navigate("/");
-//       window.location.reload();
-//       localStorage.removeItem("cartItems");
+      // alert("Order placed successfully");
+      // navigate("/");
+      // window.location.reload();
+      // localStorage.removeItem("cartItems");
 
 //       setCartItems([]);
 //     } catch (error) {
@@ -253,6 +253,7 @@ export default function Checkout() {
     phone: "",
     tableNumber: "",
     AdditionalInformation: "",
+    paymentMethod: "COD", // COD / ONLINE
   });
 
   const [enteredOTP, setEnteredOTP] = useState("");
@@ -329,26 +330,72 @@ export default function Checkout() {
   };
 
   /* =========================
-     PLACE ORDER
+     HANDLE RAZORPAY PAYMENT
   ========================= */
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (cartItems.length === 0) {
-      alert("Cart is empty");
-      return;
-    }
-
-    if (!verified) {
-      alert("Please verify phone first");
-      return;
-    }
-
+  const handleRazorpayPayment = async () => {
     try {
       setLoading(true);
 
+      // Create Razorpay order from backend
+      const { data } = await axios.post(`${BASE_URL}/create-razorpay-order`, {
+        amount: totalPrice,
+      });
+
+      const options = {
+        key: data.key,
+        amount: data.amount,
+        currency: data.currency,
+        name: "Restaurant Order",
+        description: "Food Payment",
+        order_id: data.orderId,
+
+        handler: async function (response) {
+          try {
+            const verifyRes = await axios.post(
+              `${BASE_URL}/verify-razorpay-payment`,
+              response
+            );
+
+            if (verifyRes.data.success) {
+              placeFinalOrder("ONLINE");
+            } else {
+              alert("Payment verification failed");
+            }
+          } catch (err) {
+            console.log(err);
+            alert("Payment failed");
+          }
+        },
+
+        prefill: {
+          name: formData.customerName,
+          contact: formData.phone,
+        },
+
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      const razor = new window.Razorpay(options);
+      razor.open();
+
+    } catch (error) {
+      console.log("RAZORPAY ERROR:", error);
+      alert("Payment initialization failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* =========================
+     FINAL ORDER SUBMIT
+  ========================= */
+  const placeFinalOrder = async (paymentMode) => {
+    try {
       const orderData = {
         ...formData,
+        paymentMethod: paymentMode,
         cartItems,
         totalPrice,
       };
@@ -359,12 +406,18 @@ export default function Checkout() {
       );
 
       console.log("ORDER SUCCESS:", res.data);
+
+      alert(
+        paymentMode === "ONLINE"
+          ? "Payment successful & order placed!"
+          : "Order placed successfully!"
+      );
+
       alert("Order placed successfully");
       navigate("/");
       window.location.reload();
       localStorage.removeItem("cartItems");
 
-      alert("Order placed successfully");
 
       // Clear cart
       localStorage.removeItem("cartItems");
@@ -379,8 +432,29 @@ export default function Checkout() {
     } catch (error) {
       console.log("ORDER FAILED:", error.response?.data || error);
       // alert(error.response?.data?.message || "Order failed");
-    } finally {
-      setLoading(false);
+    }
+  };
+
+  /* =========================
+     PLACE ORDER BUTTON
+  ========================= */
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (cartItems.length === 0) {
+      alert("Cart is empty");
+      return;
+    }
+
+    if (!verified) {
+      alert("Please verify phone first");
+      return;
+    }
+
+    if (formData.paymentMethod === "ONLINE") {
+      handleRazorpayPayment();
+    } else {
+      placeFinalOrder("COD");
     }
   };
 
@@ -469,6 +543,17 @@ export default function Checkout() {
             onChange={handleChange}
           />
 
+          {/* Payment Method */}
+          <select
+            name="paymentMethod"
+            value={formData.paymentMethod}
+            onChange={handleChange}
+            required
+          >
+            <option value="COD">Cash on Delivery / Pay at Restaurant</option>
+            <option value="ONLINE">Online Payment (Razorpay)</option>
+          </select>
+
           {/* Order Summary */}
           <div className="order-summary">
             <h3>Order Summary</h3>
@@ -489,7 +574,11 @@ export default function Checkout() {
             className="confirm-order-btn"
             disabled={loading}
           >
-            {loading ? "Placing Order..." : "Confirm Order"}
+            {loading
+              ? "Processing..."
+              : formData.paymentMethod === "ONLINE"
+              ? "Pay & Confirm Order"
+              : "Confirm Order"}
           </button>
 
         </form>
