@@ -236,7 +236,7 @@
 //   );
 // }
 
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { CartContext } from "../Context/context";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -248,12 +248,20 @@ export default function Checkout() {
   const { cartItems, setCartItems } = useContext(CartContext);
   const navigate = useNavigate();
 
+  /* ✅ SCROLL TO TOP ON PAGE LOAD */
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, []);
+
   const [formData, setFormData] = useState({
     customerName: "",
     phone: "",
     tableNumber: "",
     AdditionalInformation: "",
-    paymentMethod: "COD", // COD / ONLINE
+    paymentMethod: "COD",
   });
 
   const [enteredOTP, setEnteredOTP] = useState("");
@@ -266,9 +274,6 @@ export default function Checkout() {
     0
   );
 
-  /* =========================
-     HANDLE INPUT CHANGE
-  ========================= */
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -276,9 +281,6 @@ export default function Checkout() {
     }));
   };
 
-  /* =========================
-     SEND OTP
-  ========================= */
   const sendOTP = async () => {
     if (!formData.phone || formData.phone.length < 10) {
       alert("Enter valid phone number");
@@ -295,16 +297,12 @@ export default function Checkout() {
       setOtpSent(true);
       alert("OTP sent successfully");
     } catch (error) {
-      console.log("OTP SEND ERROR:", error);
       alert(error.response?.data?.message || "Failed to send OTP");
     } finally {
       setLoading(false);
     }
   };
 
-  /* =========================
-     VERIFY OTP
-  ========================= */
   const verifyOTP = async () => {
     if (!enteredOTP) {
       alert("Enter OTP");
@@ -322,24 +320,22 @@ export default function Checkout() {
       setVerified(true);
       alert(res.data.message || "Phone verified successfully");
     } catch (error) {
-      console.log("OTP VERIFY ERROR:", error);
       alert(error.response?.data?.message || "OTP verification failed");
     } finally {
       setLoading(false);
     }
   };
 
-  /* =========================
-     HANDLE RAZORPAY PAYMENT
-  ========================= */
   const handleRazorpayPayment = async () => {
     try {
       setLoading(true);
 
-      // Create Razorpay order from backend
-      const { data } = await axios.post(`${BASE_URL}/create-razorpay-order`, {
-        amount: totalPrice,
-      });
+      const { data } = await axios.post(
+        `${BASE_URL}/create-razorpay-order`,
+        {
+          amount: totalPrice,
+        }
+      );
 
       const options = {
         key: data.key,
@@ -362,7 +358,6 @@ export default function Checkout() {
               alert("Payment verification failed");
             }
           } catch (err) {
-            console.log(err);
             alert("Payment failed");
           }
         },
@@ -379,18 +374,13 @@ export default function Checkout() {
 
       const razor = new window.Razorpay(options);
       razor.open();
-
     } catch (error) {
-      console.log("RAZORPAY ERROR:", error);
       alert("Payment initialization failed");
     } finally {
       setLoading(false);
     }
   };
 
-  /* =========================
-     FINAL ORDER SUBMIT
-  ========================= */
   const placeFinalOrder = async (paymentMode) => {
     try {
       const orderData = {
@@ -405,42 +395,21 @@ export default function Checkout() {
         orderData
       );
 
-      console.log("ORDER SUCCESS:", res.data);
-
-      alert(
-        paymentMode === "ONLINE"
-          ? "Payment successful & order placed!"
-          : "Order placed successfully!"
-      );
-
       alert("Order placed successfully");
-      navigate("/");
-      window.location.reload();
-      localStorage.removeItem("cartItems");
 
-
-      // Clear cart
-      localStorage.removeItem("cartItems");
       setCartItems([]);
+      localStorage.removeItem("cartItems");
 
-      // Navigate home
       navigate("/");
-
-      // Refresh
       window.location.reload();
-
     } catch (error) {
-      console.log("ORDER FAILED:", error.response?.data || error);
-      // alert(error.response?.data?.message || "Order failed");
+      console.log(error);
     }
   };
 
-  /* =========================
-     PLACE ORDER BUTTON
-  ========================= */
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
- 
+
     if (cartItems.length === 0) {
       alert("Cart is empty");
       return;
@@ -465,7 +434,6 @@ export default function Checkout() {
 
         <form onSubmit={handleSubmit} className="checkout-form">
 
-          {/* Customer Name */}
           <input
             type="text"
             name="customerName"
@@ -475,7 +443,6 @@ export default function Checkout() {
             required
           />
 
-          {/* Phone */}
           <input
             type="tel"
             name="phone"
@@ -485,7 +452,6 @@ export default function Checkout() {
             required
           />
 
-          {/* Send OTP */}
           <button
             type="button"
             onClick={sendOTP}
@@ -495,7 +461,6 @@ export default function Checkout() {
             {loading ? "Sending..." : "Send OTP"}
           </button>
 
-          {/* OTP Verification */}
           {otpSent && (
             <>
               <input
@@ -503,7 +468,6 @@ export default function Checkout() {
                 placeholder="Enter OTP"
                 value={enteredOTP}
                 onChange={(e) => setEnteredOTP(e.target.value)}
-                required
               />
 
               <button
@@ -517,14 +481,12 @@ export default function Checkout() {
             </>
           )}
 
-          {/* Verified Status */}
           {verified && (
-            <p style={{ color: "green", fontWeight: "bold" }}>
+            <p style={{ color: "green" }}>
               Phone Verified ✅
             </p>
           )}
 
-          {/* Table Number */}
           <input
             type="number"
             name="tableNumber"
@@ -534,27 +496,23 @@ export default function Checkout() {
             required
           />
 
-          {/* Additional Information */}
           <input
             type="text"
             name="AdditionalInformation"
-            placeholder="Additional Information (Optional)"
+            placeholder="Additional Information"
             value={formData.AdditionalInformation}
             onChange={handleChange}
           />
 
-          {/* Payment Method */}
           <select
             name="paymentMethod"
             value={formData.paymentMethod}
             onChange={handleChange}
-            required
           >
-            <option value="COD">Cash on Delivery / Pay at Restaurant</option>
-            <option value="ONLINE">Online Payment (Razorpay)</option>
+            <option value="COD">COD</option>
+            <option value="ONLINE">Online Payment</option>
           </select>
 
-          {/* Order Summary */}
           <div className="order-summary">
             <h3>Order Summary</h3>
 
@@ -568,17 +526,12 @@ export default function Checkout() {
             <h2>Total: ₹{totalPrice}</h2>
           </div>
 
-          {/* Confirm Order */}
           <button
             type="submit"
             className="confirm-order-btn"
             disabled={loading}
           >
-            {loading
-              ? "Processing..."
-              : formData.paymentMethod === "ONLINE"
-              ? "Pay & Confirm Order"
-              : "Confirm Order"}
+            {loading ? "Processing..." : "Confirm Order"}
           </button>
 
         </form>
