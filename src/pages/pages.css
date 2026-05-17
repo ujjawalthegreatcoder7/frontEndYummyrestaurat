@@ -839,3 +839,39 @@
     padding: 12px 14px;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+.flash-message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: orange;
+  color: rgb(0, 0, 0);
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-weight: 500;
+  z-index: 9999;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
