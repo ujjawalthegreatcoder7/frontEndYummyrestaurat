@@ -15,7 +15,7 @@ export default function Navbar() {
     <nav className="navbar">
       {/* Logo */}
       <div className="navbar-logo">
-        <Link to="/Home">Yummy.</Link>
+        <Link to="/">Yummy.</Link>
       </div>
 
       {/* Navigation Links */}
