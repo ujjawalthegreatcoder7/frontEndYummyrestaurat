@@ -90,11 +90,14 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../Context/context";
+
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../firebase";
+
 import "./pages.css";
 
 export default function Cart() {
+
   const {
     cartItems,
     removeFromCart,
@@ -104,19 +107,29 @@ export default function Cart() {
 
   const navigate = useNavigate();
 
+  /* =========================
+     TOTAL PRICE
+  ========================= */
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
 
-  // 🔥 CHECKOUT WITH GOOGLE LOGIN + SAVE USER
+  /* =========================
+     GOOGLE LOGIN + SAVE USER
+  ========================= */
   const handleCheckout = async () => {
+
     try {
+
+      // 🔥 GOOGLE LOGIN
       const result = await signInWithPopup(auth, provider);
 
       const user = result.user;
 
-      // 🔥 FULL USER DATA
+      /* =========================
+         USER DATA
+      ========================= */
       const userData = {
         name: user.displayName,
         email: user.email,
@@ -126,68 +139,131 @@ export default function Cart() {
 
       console.log("USER DATA:", userData);
 
-      // 🔥 SAVE TO BACKEND
-      // https://front-end-yummyrestaurat-hokz.vercel.app/cart
-      // await fetch("http://localhost:5000/saveuser", {
-      await fetch("https://final-restaurant-backend-1.onrender.com/saveuser", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
+      /* =========================
+         SAVE USER TO BACKEND
+      ========================= */
+      const response = await fetch(
+        "https://final-restaurant-backend-1.onrender.com/saveuser",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        }
+      );
 
-      console.log("User saved to backend ✔");
+      const data = await response.json();
 
-      // 👉 redirect after save
-      navigate("/checkout");
+      console.log("BACKEND RESPONSE:", data);
+
+      /* =========================
+         SUCCESS
+      ========================= */
+      if (response.ok) {
+
+        console.log("User saved successfully ✔");
+
+        // 🔥 SAVE USER LOCALLY (OPTIONAL)
+        localStorage.setItem("restaurantUser", JSON.stringify(userData));
+
+        // 🔥 REDIRECT
+        navigate("/checkout");
+
+      } else {
+
+        console.log("Failed to save user");
+
+      }
 
     } catch (error) {
-      console.log("Google login failed:", error);
+
+      console.log("Google Login Error:", error);
+
     }
   };
 
   return (
     <div className="cart-page">
+
       <h1>Your Cart</h1>
 
       {cartItems.length === 0 ? (
+
         <p>Your cart is empty.</p>
+
       ) : (
+
         <>
+          {/* =========================
+              CART ITEMS
+          ========================= */}
           <div className="cart-grid">
+
             {cartItems.map((item) => (
+
               <div key={item._id} className="cart-card">
-                <img src={item.image} alt={item.name} className="cart-img" />
+
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="cart-img"
+                />
 
                 <h3>{item.name}</h3>
 
                 <p>Price: ₹{item.price}</p>
 
+                {/* QUANTITY CONTROLS */}
                 <div className="quantity-controls">
-                  <button className="qty-btn" onClick={() => decreaseQuantity(item._id)}>-</button>
+
+                  <button
+                    className="qty-btn"
+                    onClick={() => decreaseQuantity(item._id)}
+                  >
+                    -
+                  </button>
+
                   <span>{item.quantity}</span>
-                  <button className="qty-btn" onClick={() => increaseQuantity(item._id)}>+</button>
+
+                  <button
+                    className="qty-btn"
+                    onClick={() => increaseQuantity(item._id)}
+                  >
+                    +
+                  </button>
+
                 </div>
 
                 <p>Total: ₹{item.price * item.quantity}</p>
 
+                {/* REMOVE BUTTON */}
                 <button
                   className="remove-btn"
                   onClick={() => removeFromCart(item._id)}
                 >
                   Remove
                 </button>
+
               </div>
             ))}
+
           </div>
 
+          {/* =========================
+              CART SUMMARY
+          ========================= */}
           <div className="cart-summary">
+
             <h2>Total Bill: ₹{totalPrice}</h2>
 
-            <button className="checkout-btn" onClick={handleCheckout}>
-              Proceed to Checkout cds
+            <button
+              className="checkout-btn"
+              onClick={handleCheckout}
+            >
+              Proceed to Checkout
             </button>
+
           </div>
         </>
       )}
