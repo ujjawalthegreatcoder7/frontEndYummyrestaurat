@@ -445,30 +445,47 @@ export default function Checkout() {
     }
   };
 
-  const placeFinalOrder = async (paymentMode) => {
-    try {
-      const orderData = {
-        ...formData,
-        paymentMethod: paymentMode,
-        cartItems,
-        totalPrice,
-      };
+const placeFinalOrder = async (paymentMode) => {
+  try {
 
-      const res = await axios.post(
-        `${BASE_URL}/place-order`,
-        orderData
-      );
-      navigate("/");
+    // 🔥 GET GOOGLE USER
+    const savedUser = JSON.parse(
+      localStorage.getItem("restaurantUser")
+    );
 
-      alert("Order placed successfully");
-      window.location.reload();      
-      localStorage.removeItem("cartItems");
+    // 🔥 ORDER DATA
+const orderData = {
+  ...formData,
+  paymentMethod: paymentMode,
+  cartItems,
+  totalPrice,
 
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // 🔥 GOOGLE USER DATA
+  customerUID: savedUser?.uid,
+  customerName: savedUser?.name,
+  customerEmail: savedUser?.email,
+  customerPhoto: savedUser?.photo,
+};
+    // 🔥 API CALL
+    const res = await axios.post(
+      `${BASE_URL}/place-order`,
+      orderData
+    );
 
+    navigate("/");
+
+    alert("Order placed successfully");
+
+    window.location.reload();
+
+    localStorage.removeItem("cartItems");
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+};
   const handleSubmit = (e) => {
     e.preventDefault();
 
