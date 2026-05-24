@@ -312,12 +312,8 @@ export default function Checkout() {
   const { cartItems, setCartItems } = useContext(CartContext);
   const navigate = useNavigate();
 
-  /* ✅ SCROLL TO TOP ON PAGE LOAD */
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   const [formData, setFormData] = useState({
@@ -345,6 +341,7 @@ export default function Checkout() {
     }));
   };
 
+  /* ================= OTP ================= */
   const sendOTP = async () => {
     if (!formData.phone || formData.phone.length < 10) {
       alert("Enter valid phone number");
@@ -382,7 +379,7 @@ export default function Checkout() {
       });
 
       setVerified(true);
-      alert(res.data.message || "Phone verified successfully");
+      alert(res.data.message);
     } catch (error) {
       alert(error.response?.data?.message || "OTP verification failed");
     } finally {
@@ -390,15 +387,14 @@ export default function Checkout() {
     }
   };
 
+  /* ================= RAZORPAY ================= */
   const handleRazorpayPayment = async () => {
     try {
       setLoading(true);
 
       const { data } = await axios.post(
         `${BASE_URL}/create-razorpay-order`,
-        {
-          amount: totalPrice,
-        }
+        { amount: totalPrice }
       );
 
       const options = {
@@ -421,7 +417,7 @@ export default function Checkout() {
             } else {
               alert("Payment verification failed");
             }
-          } catch (err) {
+          } catch {
             alert("Payment failed");
           }
         },
@@ -431,61 +427,65 @@ export default function Checkout() {
           contact: formData.phone,
         },
 
-        theme: {
-          color: "#ffbd06",
-        },
+        theme: { color: "#ffbd06" },
       };
 
       const razor = new window.Razorpay(options);
       razor.open();
-    } catch (error) {
+    } catch {
       alert("Payment initialization failed");
     } finally {
       setLoading(false);
     }
   };
 
-const placeFinalOrder = async (paymentMode) => {
-  try {
+  /* ================= PLACE ORDER ================= */
+  const placeFinalOrder = async (paymentMode) => {
+    try {
+      const savedUser = JSON.parse(
+        localStorage.getItem("restaurantUser")
+      );
 
-    // 🔥 GET GOOGLE USER
-    const savedUser = JSON.parse(
-      localStorage.getItem("restaurantUser")
-    );
+      const orderData = {
+        ...formData,
+        paymentMethod: paymentMode,
+        cartItems,
+        totalPrice,
 
-    // 🔥 ORDER DATA
-const orderData = {
-  ...formData,
-  paymentMethod: paymentMode,
-  cartItems,
-  totalPrice,
+        customerUID: savedUser?.uid,
+        customerName: savedUser?.name,
+        customerEmail: savedUser?.email,
+        customerPhoto: savedUser?.photo,
+      };
 
-  // 🔥 GOOGLE USER DATA
-  customerUID: savedUser?.uid,
-  customerName: savedUser?.name,
-  customerEmail: savedUser?.email,
-  customerPhoto: savedUser?.photo,
-};
-    // 🔥 API CALL
-    const res = await axios.post(
-      `${BASE_URL}/place-order`,
-      orderData
-    );
+      const res = await axios.post(
+        `${BASE_URL}/place-order`,
+        orderData
+      );
 
-    navigate("/");
+      console.log(res.data);
 
-    alert("Order placed successfully");
+      alert("Order placed successfully");
 
-    window.location.reload();
+      /* 🔥 FIXED BILL OPEN */
+      if (res.data.billPath) {
+window.open(`${BASE_URL}${res.data.billPath}`)      
+}
 
-    localStorage.removeItem("cartItems");
+      /* CLEAR CART */
+      navigate("/");
+      window.location.reload();
+      localStorage.removeItem("cartItems");
 
-  } catch (error) {
+      setCartItems([]);
 
-    console.log(error);
 
-  }
-};
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  /* ================= SUBMIT ================= */
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -493,11 +493,6 @@ const orderData = {
       alert("Cart is empty");
       return;
     }
-
-    // if (!verified) {
-    //   alert("Please verify phone first");
-    //   return;
-    // }
 
     if (formData.paymentMethod === "ONLINE") {
       handleRazorpayPayment();
@@ -513,59 +508,7 @@ const orderData = {
 
         <form onSubmit={handleSubmit} className="checkout-form">
 
-          {/* <input
-            type="text"
-            name="customerName"
-            placeholder="Customer Name"
-            value={formData.customerName}
-            onChange={handleChange}
-            required
-          /> */}
-
-          {/* <input
-            type="tel"
-            name="phone"
-            placeholder="Phone Number"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-          /> */}
-
-          {/* <button
-            type="button"
-            onClick={sendOTP}
-            className="confirm-order-btn"
-            disabled={loading}
-          > */}
-            {/* {loading ? "Sending..." : "Send OTP"}
-          </button> */}
-
-          {/* {otpSent && (
-            <>
-              <input
-                type="text"
-                placeholder="Enter OTP"
-                value={enteredOTP}
-                onChange={(e) => setEnteredOTP(e.target.value)}
-              />
-
-              <button
-                type="button"
-                className="confirm-order-btn"
-                onClick={verifyOTP}
-                disabled={loading}
-              >
-                {loading ? "Verifying..." : "Verify OTP"}
-              </button>
-            </>
-          )} */}
-
-          {/* {verified && (
-            <p style={{ color: "green" }}>
-              Phone Verified ✅
-            </p>
-          )} */}
-
+          {/* TABLE */}
           <input
             type="number"
             name="tableNumber"
@@ -575,6 +518,7 @@ const orderData = {
             required
           />
 
+          {/* ADDITIONAL INFO */}
           <input
             type="text"
             name="AdditionalInformation"
@@ -583,6 +527,7 @@ const orderData = {
             onChange={handleChange}
           />
 
+          {/* PAYMENT */}
           <select
             name="paymentMethod"
             value={formData.paymentMethod}
@@ -592,6 +537,7 @@ const orderData = {
             <option value="ONLINE">Online Payment</option>
           </select>
 
+          {/* SUMMARY */}
           <div className="order-summary">
             <h3>Order Summary</h3>
 
@@ -605,6 +551,7 @@ const orderData = {
             <h2>Total: ₹{totalPrice}</h2>
           </div>
 
+          {/* BUTTON */}
           <button
             type="submit"
             className="confirm-order-btn"
