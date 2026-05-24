@@ -186,7 +186,7 @@ export default function Cart() {
             <h2>Total Bill: ₹{totalPrice}</h2>
 
             <button className="checkout-btn" onClick={handleCheckout}>
-              Proceed to Checkout
+              Proceed to Checkout cds
             </button>
           </div>
         </>
