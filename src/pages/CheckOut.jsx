@@ -1,4 +1,4 @@
-// import { useContext, useState } from "react";
+// import { useContext, useState, useEffect } from "react";
 // import { CartContext } from "../Context/context";
 // import axios from "axios";
 // import { useNavigate } from "react-router-dom";
@@ -10,10 +10,20 @@
 //   const { cartItems, setCartItems } = useContext(CartContext);
 //   const navigate = useNavigate();
 
+//   /* ✅ SCROLL TO TOP ON PAGE LOAD */
+//   useEffect(() => {
+//     window.scrollTo({
+//       top: 0,
+//       behavior: "smooth",
+//     });
+//   }, []);
+
 //   const [formData, setFormData] = useState({
 //     customerName: "",
 //     phone: "",
 //     tableNumber: "",
+//     AdditionalInformation: "",
+//     paymentMethod: "COD",
 //   });
 
 //   const [enteredOTP, setEnteredOTP] = useState("");
@@ -27,15 +37,12 @@
 //   );
 
 //   const handleChange = (e) => {
-//     setFormData({
-//       ...formData,
+//     setFormData((prev) => ({
+//       ...prev,
 //       [e.target.name]: e.target.value,
-//     });
+//     }));
 //   };
 
-//   /* =========================
-//      SEND OTP
-//   ========================= */
 //   const sendOTP = async () => {
 //     if (!formData.phone || formData.phone.length < 10) {
 //       alert("Enter valid phone number");
@@ -52,16 +59,12 @@
 //       setOtpSent(true);
 //       alert("OTP sent successfully");
 //     } catch (error) {
-//       console.log(error);
 //       alert(error.response?.data?.message || "Failed to send OTP");
 //     } finally {
 //       setLoading(false);
 //     }
 //   };
 
-//   /* =========================
-//      VERIFY OTP
-//   ========================= */
 //   const verifyOTP = async () => {
 //     if (!enteredOTP) {
 //       alert("Enter OTP");
@@ -77,19 +80,94 @@
 //       });
 
 //       setVerified(true);
-//       alert(res.data.message);
+//       alert(res.data.message || "Phone verified successfully");
 //     } catch (error) {
-//       console.log(error);
 //       alert(error.response?.data?.message || "OTP verification failed");
 //     } finally {
 //       setLoading(false);
 //     }
 //   };
 
-//   /* =========================
-//      PLACE ORDER
-//   ========================= */
-//   const handleSubmit = async (e) => {
+//   const handleRazorpayPayment = async () => {
+//     try {
+//       setLoading(true);
+
+//       const { data } = await axios.post(
+//         `${BASE_URL}/create-razorpay-order`,
+//         {
+//           amount: totalPrice,
+//         }
+//       );
+
+//       const options = {
+//         key: data.key,
+//         amount: data.amount,
+//         currency: data.currency,
+//         name: "Restaurant Order",
+//         description: "Food Payment",
+//         order_id: data.orderId,
+
+//         handler: async function (response) {
+//           try {
+//             const verifyRes = await axios.post(
+//               `${BASE_URL}/verify-razorpay-payment`,
+//               response
+//             );
+
+//             if (verifyRes.data.success) {
+//               placeFinalOrder("ONLINE");
+//             } else {
+//               alert("Payment verification failed");
+//             }
+//           } catch (err) {
+//             alert("Payment failed");
+//           }
+//         },
+
+//         prefill: {
+//           name: formData.customerName,
+//           contact: formData.phone,
+//         },
+
+//         theme: {
+//           color: "#3399cc",
+//         },
+//       };
+
+//       const razor = new window.Razorpay(options);
+//       razor.open();
+//     } catch (error) {
+//       alert("Payment initialization failed");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const placeFinalOrder = async (paymentMode) => {
+//     try {
+//       const orderData = {
+//         ...formData,
+//         paymentMethod: paymentMode,
+//         cartItems,
+//         totalPrice,
+//       };
+
+//       const res = await axios.post(
+//         `${BASE_URL}/place-order`,
+//         orderData
+//       );
+//       navigate("/");
+
+//       alert("Order placed successfully");
+//       window.location.reload();      
+//       localStorage.removeItem("cartItems");
+
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
+
+//   const handleSubmit = (e) => {
 //     e.preventDefault();
 
 //     if (cartItems.length === 0) {
@@ -97,40 +175,15 @@
 //       return;
 //     }
 
-//     // OTP verification disabled temporarily
 //     if (!verified) {
 //       alert("Please verify phone first");
 //       return;
 //     }
 
-//     try {
-//       setLoading(true);
-
-//       const orderData = {
-//         ...formData,
-//         cartItems,
-//         totalPrice,
-//       };
-
-//       const res = await axios.post(
-//         `${BASE_URL}/place-order`,
-//         // "http://localhost:5000/place-order",
-//         orderData
-//       );
-
-//       console.log("SUCCESS:", res.data);
-
-      // alert("Order placed successfully");
-      // navigate("/");
-      // window.location.reload();
-      // localStorage.removeItem("cartItems");
-
-//       setCartItems([]);
-//     } catch (error) {
-//       console.log("FAILED:", error.response?.data || error);
-//       // alert(error.response?.data?.message || "Order failed");
-//     } finally {
-//       setLoading(false);
+//     if (formData.paymentMethod === "ONLINE") {
+//       handleRazorpayPayment();
+//     } else {
+//       placeFinalOrder("COD");
 //     }
 //   };
 
@@ -140,6 +193,7 @@
 //         <h1>Complete Your Order</h1>
 
 //         <form onSubmit={handleSubmit} className="checkout-form">
+
 //           <input
 //             type="text"
 //             name="customerName"
@@ -164,7 +218,7 @@
 //             className="confirm-order-btn"
 //             disabled={loading}
 //           >
-//             Send OTP
+//             {loading ? "Sending..." : "Send OTP"}
 //           </button>
 
 //           {otpSent && (
@@ -182,7 +236,7 @@
 //                 onClick={verifyOTP}
 //                 disabled={loading}
 //               >
-//                 Verify OTP
+//                 {loading ? "Verifying..." : "Verify OTP"}
 //               </button>
 //             </>
 //           )}
@@ -201,16 +255,25 @@
 //             onChange={handleChange}
 //             required
 //           />
+
 //           <input
-//             // type="number"
+//             type="text"
 //             name="AdditionalInformation"
 //             placeholder="Additional Information"
 //             value={formData.AdditionalInformation}
 //             onChange={handleChange}
-            
-//           /> 
+//           />
 
-//           <div>
+//           <select
+//             name="paymentMethod"
+//             value={formData.paymentMethod}
+//             onChange={handleChange}
+//           >
+//             <option value="COD">COD</option>
+//             <option value="ONLINE">Online Payment</option>
+//           </select>
+
+//           <div className="order-summary">
 //             <h3>Order Summary</h3>
 
 //             {cartItems.map((item) => (
@@ -228,8 +291,9 @@
 //             className="confirm-order-btn"
 //             disabled={loading}
 //           >
-//             Confirm Order
+//             {loading ? "Processing..." : "Confirm Order"}
 //           </button>
+
 //         </form>
 //       </div>
 //     </div>
@@ -368,7 +432,7 @@ export default function Checkout() {
         },
 
         theme: {
-          color: "#3399cc",
+          color: "#ffbd06",
         },
       };
 
@@ -394,14 +458,12 @@ export default function Checkout() {
         `${BASE_URL}/place-order`,
         orderData
       );
+      navigate("/");
 
       alert("Order placed successfully");
-
-      setCartItems([]);
+      window.location.reload();      
       localStorage.removeItem("cartItems");
 
-      navigate("/");
-      window.location.reload();
     } catch (error) {
       console.log(error);
     }
@@ -415,10 +477,10 @@ export default function Checkout() {
       return;
     }
 
-    if (!verified) {
-      alert("Please verify phone first");
-      return;
-    }
+    // if (!verified) {
+    //   alert("Please verify phone first");
+    //   return;
+    // }
 
     if (formData.paymentMethod === "ONLINE") {
       handleRazorpayPayment();
@@ -434,34 +496,34 @@ export default function Checkout() {
 
         <form onSubmit={handleSubmit} className="checkout-form">
 
-          <input
+          {/* <input
             type="text"
             name="customerName"
             placeholder="Customer Name"
             value={formData.customerName}
             onChange={handleChange}
             required
-          />
+          /> */}
 
-          <input
+          {/* <input
             type="tel"
             name="phone"
             placeholder="Phone Number"
             value={formData.phone}
             onChange={handleChange}
             required
-          />
+          /> */}
 
-          <button
+          {/* <button
             type="button"
             onClick={sendOTP}
             className="confirm-order-btn"
             disabled={loading}
-          >
-            {loading ? "Sending..." : "Send OTP"}
-          </button>
+          > */}
+            {/* {loading ? "Sending..." : "Send OTP"}
+          </button> */}
 
-          {otpSent && (
+          {/* {otpSent && (
             <>
               <input
                 type="text"
@@ -479,13 +541,13 @@ export default function Checkout() {
                 {loading ? "Verifying..." : "Verify OTP"}
               </button>
             </>
-          )}
+          )} */}
 
-          {verified && (
+          {/* {verified && (
             <p style={{ color: "green" }}>
               Phone Verified ✅
             </p>
-          )}
+          )} */}
 
           <input
             type="number"
