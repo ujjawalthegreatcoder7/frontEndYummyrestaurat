@@ -7,6 +7,7 @@ const BASE_URL =
 export default function Admin() {
 
   const [orders, setOrders] = useState([]);
+  const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
   /* ================= FETCH ORDERS ================= */
@@ -30,16 +31,7 @@ export default function Admin() {
           savedPassword
         );
       }
-/* ================= COMPLETE ORDER ================= */
-const completeOrder = (billNumber) => {
 
-  const updatedOrders = orders.filter(
-    (order) => order.billNumber !== billNumber
-  );
-
-  setOrders(updatedOrders);
-
-};
       const res = await axios.get(
         `${BASE_URL}/yummyrestaurant/backend`,
         {
@@ -81,14 +73,69 @@ const completeOrder = (billNumber) => {
     }
   };
 
+  /* ================= FETCH MENU ================= */
+  const fetchMenu = async () => {
+
+    try {
+
+      const res = await axios.get(
+        `${BASE_URL}/admin/menu`
+      );
+
+      setMenuItems(res.data);
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+
+  };
+
+  /* ================= TOGGLE FOOD ================= */
+const toggleFood = async (id) => {
+
+  try {
+
+    const res = await axios.put(
+      `${BASE_URL}/admin/toggle-food/${id}`
+    );
+
+    /* ✅ SUCCESS FLASH */
+    alert(res.data.message);
+
+    fetchMenu();
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert("Failed To Update Food");
+
+  }
+
+};
+  /* ================= COMPLETE ORDER ================= */
+  const completeOrder = (billNumber) => {
+
+    const updatedOrders = orders.filter(
+      (order) => order.billNumber !== billNumber
+    );
+
+    setOrders(updatedOrders);
+
+  };
+
   /* ================= AUTO LOAD ================= */
   useEffect(() => {
 
     fetchOrders();
+    fetchMenu();
 
     /* AUTO REFRESH */
     const interval = setInterval(() => {
       fetchOrders();
+      fetchMenu();
     }, 5000);
 
     return () => clearInterval(interval);
@@ -154,6 +201,80 @@ const completeOrder = (billNumber) => {
 
       </div>
 
+      {/* ================= FOOD CONTROL ================= */}
+
+      <div
+        style={{
+          marginBottom: "40px",
+        }}
+      >
+
+        <h2
+          style={{
+            color: "#ffbd06",
+            marginBottom: "20px",
+          }}
+        >
+          🍔 Food Availability Control
+        </h2>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(auto-fit,minmax(250px,1fr))",
+            gap: "15px",
+          }}
+        >
+
+          {menuItems.map((item, index) => (
+
+            <div
+              key={index}
+              style={{
+                background: "#1b1b1b",
+                padding: "15px",
+                borderRadius: "12px",
+                border: "1px solid #333",
+              }}
+            >
+
+              <h3>{item.name}</h3>
+
+              <p>₹ {item.price}</p>
+
+              <button
+                onClick={() =>
+                  toggleFood(item._id)
+                }
+                style={{
+                  background:
+                    item.available
+                      ? "red"
+                      : "green",
+
+                  color: "white",
+                  border: "none",
+                  padding: "10px",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  width: "100%",
+                  fontWeight: "bold",
+                }}
+              >
+                {item.available
+                  ? "Disable Food"
+                  : "Enable Food"}
+              </button>
+
+            </div>
+
+          ))}
+
+        </div>
+
+      </div>
+
       {/* LOADING */}
       {loading ? (
 
@@ -185,7 +306,6 @@ const completeOrder = (billNumber) => {
                 border: "2px solid #fff7f7",
                 boxShadow:
                   "0 0 30px rgb(255, 196, 0)",
-                  backdropFilter : 100,
               }}
             >
 
@@ -274,8 +394,6 @@ const completeOrder = (billNumber) => {
                 Ordered Items
               </h3>
 
-
-
               {order.cartItems.map(
                 (item, i) => (
 
@@ -315,6 +433,28 @@ const completeOrder = (billNumber) => {
 
                 )
               )}
+
+              {/* COMPLETE BUTTON */}
+              <button
+                onClick={() =>
+                  completeOrder(
+                    order.billNumber
+                  )
+                }
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  border: "none",
+                  borderRadius: "10px",
+                  background: "limegreen",
+                  color: "white",
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                  marginTop: "15px",
+                }}
+              >
+                ✅ Order Completed
+              </button>
 
             </div>
 
