@@ -179,12 +179,13 @@ const completeOrder = (billNumber) => {
             <div
               key={index}
               style={{
-                background: "#1b1b1b",
-                borderRadius: "15px",
+                background: "#000000",
+                borderRadius: "10px",
                 padding: "20px",
-                border: "1px solid #333",
+                border: "2px solid #fff7f7",
                 boxShadow:
-                  "0 0 10px rgba(0,0,0,0.4)",
+                  "0 0 30px rgb(255, 196, 0)",
+                  backdropFilter : 100,
               }}
             >
 
@@ -260,7 +261,7 @@ const completeOrder = (billNumber) => {
 
               <hr
                 style={{
-                  borderColor: "#333",
+                  borderColor: "#ff9d00",
                   margin: "15px 0",
                 }}
               />
@@ -281,7 +282,7 @@ const completeOrder = (billNumber) => {
                   <div
                     key={i}
                     style={{
-                      background: "#262626",
+                      background: "#767676",
                       padding: "12px",
                       borderRadius: "10px",
                       marginBottom: "10px",
