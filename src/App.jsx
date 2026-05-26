@@ -5,6 +5,7 @@ import Menu from "./pages/Menu";
 import Cart from "./pages/Cart";
 import Navbar from "./Components/Navbar";
 import Checkout from "./pages/CheckOut";
+import Admin from "./pages/Admin";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/Menu" element={<Menu />} />
         <Route path="/Cart" element={<Cart />} />
         <Route path="/CheckOut" element={<Checkout />} />
+        <Route path="/Admin" element={<Admin/>} />
       </Routes>
       <Footer/>
     </BrowserRouter>

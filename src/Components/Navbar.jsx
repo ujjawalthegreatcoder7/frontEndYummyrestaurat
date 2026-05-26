@@ -23,6 +23,7 @@ export default function Navbar() {
         <Link to="/">Home</Link>
         <Link to="/menu">Menu</Link>
         <Link to="/contact">Details</Link>
+        <Link to="/Admin">Admin</Link>
       </div>
 
       {/* Cart */}
