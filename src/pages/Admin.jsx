@@ -184,6 +184,31 @@ const toggleFood = async (id) => {
           🍽️ Yummy Restaurant Admin
         </h1>
 
+<div
+  style={{
+    marginTop: "15px",
+    marginBottom: "25px",
+  }}
+>
+  <button
+    onClick={() =>
+      window.location.href = "/FoodAvailability"
+    }
+    style={{
+      background: "#ffbd06",
+      color: "black",
+      border: "none",
+      padding: "12px 20px",
+      borderRadius: "10px",
+      fontWeight: "bold",
+      cursor: "pointer",
+      fontSize: "16px",
+    }}
+  >
+    🍔 Food Availability Control
+  </button>
+</div>
+
         <button
           onClick={logoutAdmin}
           style={{
@@ -203,7 +228,7 @@ const toggleFood = async (id) => {
 
       {/* ================= FOOD CONTROL ================= */}
 
-      <div
+      {/* <div
         style={{
           marginBottom: "40px",
         }}
@@ -273,7 +298,7 @@ const toggleFood = async (id) => {
 
         </div>
 
-      </div>
+      </div> */}
 
       {/* LOADING */}
       {loading ? (
@@ -435,26 +460,6 @@ const toggleFood = async (id) => {
               )}
 
               {/* COMPLETE BUTTON */}
-              <button
-                onClick={() =>
-                  completeOrder(
-                    order.billNumber
-                  )
-                }
-                style={{
-                  width: "100%",
-                  padding: "12px",
-                  border: "none",
-                  borderRadius: "10px",
-                  background: "limegreen",
-                  color: "white",
-                  fontWeight: "bold",
-                  cursor: "pointer",
-                  marginTop: "15px",
-                }}
-              >
-                ✅ Order Completed
-              </button>
 
             </div>
 

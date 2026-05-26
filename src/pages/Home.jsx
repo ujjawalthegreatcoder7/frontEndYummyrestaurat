@@ -21,7 +21,24 @@ const Home = () => {
                         </div>
 
                         <div className="button-group">
-                            <a href="/menu" className="menu-btn">Order From Menu</a>
+                            {/* <a href="/menu" className="menu-btn">Order From Menu</a> */}
+
+                         <button className="menu-btn"
+    onClick={() =>
+      window.location.href = "/menu"
+    }
+    style={{
+    //   background: "#ffbd06",
+    //   color: "black",
+    //   border: "none",
+    //   padding: "12px 20px",
+    //   borderRadius: "10px",
+    //   fontWeight: "bold",
+    //   cursor: "pointer",
+    //   fontSize: "16px",
+    }}
+  > Order From Menu </button>
+     
                                 <a
                                   href="https://api.whatsapp.com/send?phone=919971289376"
                                   target="_blank"
