@@ -22,7 +22,7 @@ export default function Navbar() {
       <div className="navbar-links">
         <Link to="/">Home</Link>
         <Link to="/menu">Menu</Link>
-        <Link to="/contact">Details</Link>
+        <Link to="/details">Details</Link>
         <Link to="/Admin">Admin</Link>
       </div>
 
