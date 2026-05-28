@@ -184,31 +184,35 @@ const toggleFood = async (id) => {
           🍽️ Yummy Restaurant Admin
         </h1>
 
-<div
-  style={{
-    marginTop: "15px",
-    marginBottom: "25px",
-  }}
->
-  <button
-    onClick={() =>
-      window.location.href = "/FoodAvailability"
-    }
+{localStorage.getItem("adminPassword") && (
+
+  <div
     style={{
-      background: "#ffbd06",
-      color: "black",
-      border: "none",
-      padding: "12px 20px",
-      borderRadius: "10px",
-      fontWeight: "bold",
-      cursor: "pointer",
-      fontSize: "16px",
+      marginTop: "15px",
+      marginBottom: "25px",
     }}
   >
-    🍔 Food Availability Control
-  </button>
-</div>
+    <button
+      onClick={() =>
+        window.location.href =
+          "/FoodAvailability"
+      }
+      style={{
+        background: "#ffbd06",
+        color: "black",
+        border: "none",
+        padding: "12px 20px",
+        borderRadius: "10px",
+        fontWeight: "bold",
+        cursor: "pointer",
+        fontSize: "16px",
+      }}
+    >
+      🍔 Food Availability Control
+    </button>
+  </div>
 
+)}
         <button
           onClick={logoutAdmin}
           style={{
