@@ -6,9 +6,11 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import "./pages.css";
-
 import { CartContext } from "../Context/context";
 import CartSkeleton from "./skeleton";
+import AOS from "aos";
+import "aos/dist/aos.css";
+
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -45,11 +47,25 @@ export default function Menu() {
       .catch((err) => console.log(err));
   }, []);
 
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      once: true,
+      offset: 50,
+    });
+  }, []);
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+
+    setTimeout(() => {
+      AOS.refresh();
+    }, 100);
+  };
   const categories = ["Chinese", "Main Course", "Beverages", "Desserts"];
 
   const filterItems = (category) => {
@@ -95,8 +111,13 @@ export default function Menu() {
   const renderMenuItems = (items) => (
     <div className="menu-grid">
       {items.length > 0 ? (
-        items.map((item) => (
-          <div key={item._id} className="menu-card">
+        items.map((item, index) => (
+          <div
+            key={item._id}
+            className="menu-card"
+            data-aos="zoom-in-up"
+            data-aos-delay={index * 100}
+          >
             <img src={item.image} alt={item.name} className="menu-img" />
 
             <h3>{item.name}</h3>
@@ -107,7 +128,7 @@ export default function Menu() {
               className="add-cart-btn"
               onClick={() => {
                 addToCart(item);
-                showFlash(" Added to cart successfully!");
+                showFlash("Added to cart successfully!");
               }}
             >
               Add to Cart
@@ -119,7 +140,6 @@ export default function Menu() {
       )}
     </div>
   );
-
   return (
     <div className="menu-page">
 
@@ -135,13 +155,14 @@ export default function Menu() {
         <h1 className="menu-title">Choose Your Favorite Dish</h1>
       </div>
 
-      <Box sx={{ display: "flex", 
+      <Box sx={{
+        display: "flex",
 
       }}>
         <Tabs
-      style={{
-        backgroundColor: "#ffffff", // ✅ ALL WHITE
-      }}
+          style={{
+            backgroundColor: "#ffffff", // ✅ ALL WHITE
+          }}
 
 
           orientation="vertical"
