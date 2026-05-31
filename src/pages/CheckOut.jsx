@@ -163,19 +163,20 @@ export default function Checkout() {
       );
 
       console.log(res.data);
+        window.open(res.data.billUrl, "_blank");
 
       alert("Order placed successfully");
 
       /* 🔥 FIXED BILL OPEN (ONLY CHANGE) */
       // if (res.data.billUrl) {
-        window.open(res.data.billUrl, "_blank");
+        // window.open(res.data.billUrl, "_blank");
       // }
+      localStorage.removeItem("cartItems");
+      setCartItems([]);
 
       /* CLEAR CART */
       navigate("/");
       // window.location.reload();
-      localStorage.removeItem("cartItems");
-      setCartItems([]);
 
     } catch (error) {
       console.log(error);
