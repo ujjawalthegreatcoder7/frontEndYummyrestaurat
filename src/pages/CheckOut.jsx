@@ -178,8 +178,9 @@ export default function Checkout() {
       localStorage.removeItem("cartItems");
       setCartItems([]);
     } catch (error) {
-      console.log(error);
-    }
+  console.log("ORDER ERROR:", error);
+  alert(error?.response?.data?.message || error.message);
+}
   };
 
   /* ================= SUBMIT ================= */
