@@ -678,7 +678,7 @@ export default function Checkout() {
             );
 
             if (verifyRes.data.success) {
-              placeFinalOrder("ONLINE");
+              // placeFinalOrder("ONLINE");
 
 
 
