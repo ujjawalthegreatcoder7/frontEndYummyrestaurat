@@ -679,6 +679,55 @@ export default function Checkout() {
 
             if (verifyRes.data.success) {
               placeFinalOrder("ONLINE");
+
+
+
+      try {
+      const savedUser = JSON.parse(
+        localStorage.getItem("restaurantUser")
+      );
+
+      const orderData = {
+        ...formData,
+        paymentMethod: "Online",
+        cartItems,
+        totalPrice,
+
+        customerUID: savedUser?.uid,
+        customerName: savedUser?.name,
+        customerEmail: savedUser?.email,
+        customerPhoto: savedUser?.photo,
+      };
+
+      const res = await axios.post(
+        `${BASE_URL}/place-order`,
+        orderData
+      );
+
+      console.log(res.data);
+
+      alert("Order placed successfully");
+
+      /* 🔥 FIXED BILL OPEN (ONLY CHANGE) */
+      // if (res.data.billUrl) {
+        window.open(res.data.billUrl, "_blank");
+        window.open( "https://front-end-yummyrestaurat-hokz.vercel.app/" );
+
+      // }
+
+      /* CLEAR CART */
+      navigate("/");
+      window.location.reload();
+      localStorage.removeItem("cartItems");
+
+      setCartItems([]);
+
+    } catch (error) {
+      console.log(error);
+    }
+
+
+              
             } else {
               alert("Payment verification failed");
             }
