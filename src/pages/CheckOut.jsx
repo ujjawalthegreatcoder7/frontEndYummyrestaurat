@@ -678,56 +678,71 @@ export default function Checkout() {
             );
 
             if (verifyRes.data.success) {
-              // placeFinalOrder("ONLINE");
+              placeFinalOrder("ONLINE");
 
 
 
-      try {
-      const savedUser = JSON.parse(
-        localStorage.getItem("restaurantUser")
-      );
+              try {
+                const savedUser = JSON.parse(
+                  localStorage.getItem("restaurantUser")
+                );
 
-      const orderData = {
-        ...formData,
-        paymentMethod: "ONLINE",
-        cartItems,
-        totalPrice,
+                const orderData = {
+                  ...formData,
+                  paymentMethod: "ONLINE",
+                  cartItems,
+                  totalPrice,
 
-        customerUID: savedUser?.uid,
-        customerName: savedUser?.name,
-        customerEmail: savedUser?.email,
-        customerPhoto: savedUser?.photo,
-      };
+                  customerUID: savedUser?.uid,
+                  customerName: savedUser?.name,
+                  customerEmail: savedUser?.email,
+                  customerPhoto: savedUser?.photo,
+                };
 
-      const res = await axios.post(
-        `${BASE_URL}/place-order`,
-        orderData
-      );
+                const res = await axios.post(
+                  `${BASE_URL}/place-order`,
+                  orderData
+                );
 
-      console.log(res.data);
+                console.log(res.data);
 
-      alert("Order placed successfully");
+                alert("Order placed successfully");
 
-      /* 🔥 FIXED BILL OPEN (ONLY CHANGE) */
-      // if (res.data.billUrl) {
-        window.open(res.data.billUrl, "_blank");
-        window.open( "https://front-end-yummyrestaurat-hokz.vercel.app/" );
+                /* 🔥 FIXED BILL OPEN (ONLY CHANGE) */
+                // if (res.data.billUrl) {
+                // window.open(res.data.billUrl, "_blank");
+                // }
 
-      // }
+                // if (res.data.billUrl) {
+                //   window.location.href = res.data.billUrl;
+                //   return;
+                // }
 
-      /* CLEAR CART */
-      navigate("/");
-      window.location.reload();
-      localStorage.removeItem("cartItems");
+                if (res.data.billUrl) {
+                  const link = document.createElement("a");
+                  link.href = res.data.billUrl;
+                  link.setAttribute("download", "bill.pdf");
 
-      setCartItems([]);
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
 
-    } catch (error) {
-      console.log(error);
-    }
+                  return;
+                }
+
+                /* CLEAR CART */
+                navigate("/");
+                window.location.reload();
+                localStorage.removeItem("cartItems");
+
+                setCartItems([]);
+
+              } catch (error) {
+                console.log(error);
+              }
 
 
-              
+
             } else {
               alert("Payment verification failed");
             }
@@ -782,10 +797,18 @@ export default function Checkout() {
       alert("Order placed successfully");
 
       /* 🔥 FIXED BILL OPEN (ONLY CHANGE) */
+      // if (res.data.billUrl) {
+      //   window.open(res.data.billUrl, "_blank");
+      // }
       if (res.data.billUrl) {
-        window.open(res.data.billUrl, "_blank");
-      }
 
+        // New tab me bill open
+        window.open(
+          res.data.billUrl,
+          "_blank",
+          "noopener,noreferrer"
+        );
+      }
       /* CLEAR CART */
       navigate("/");
       window.location.reload();
