@@ -169,7 +169,7 @@ export default function Checkout() {
       if (res.data.billUrl) {
         window.open(res.data.billUrl, "_blank");
 
-        return;
+        // return;
       }
 
       /* CLEAR CART */
@@ -178,8 +178,8 @@ export default function Checkout() {
       localStorage.removeItem("cartItems");
       setCartItems([]);
     } catch (error) {
-  console.log("ORDER ERROR:", error);
-  alert(error?.response?.data?.message || error.message);
+ console.log("FULL RESPONSE:", JSON.stringify(res.data, null, 2));
+alert(JSON.stringify(res.data));
 }
   };
 
