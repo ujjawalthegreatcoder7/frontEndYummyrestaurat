@@ -678,7 +678,7 @@ export default function Checkout() {
             );
 
             if (verifyRes.data.success) {
-              placeFinalOrder("ONLINE");
+              // placeFinalOrder("ONLINE");
 
 
 
@@ -689,7 +689,7 @@ export default function Checkout() {
 
       const orderData = {
         ...formData,
-        paymentMethod: "Online",
+        paymentMethod: "ONLINE",
         cartItems,
         totalPrice,
 
@@ -741,7 +741,7 @@ export default function Checkout() {
           contact: formData.phone,
         },
 
-        theme: { color: "#ffbd06" },
+        theme: { color: "#4dff00" },
       };
 
       const razor = new window.Razorpay(options);
