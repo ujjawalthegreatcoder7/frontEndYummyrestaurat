@@ -112,8 +112,36 @@ export default function Checkout() {
             );
 
             if (verifyRes.data.success) {
-              placeFinalOrder("ONLINE");
-            } else {
+
+              const newTab = window.open("", "_blank");
+
+              const savedUser = JSON.parse(
+                localStorage.getItem("restaurantUser")
+              );
+
+              const orderData = {
+                ...formData,
+                paymentMethod: "ONLINE",
+                cartItems,
+                totalPrice,
+
+                customerUID: savedUser?.uid,
+                customerName: savedUser?.name,
+                customerEmail: savedUser?.email,
+                customerPhoto: savedUser?.photo,
+              };
+
+              const res = await axios.post(
+                `${BASE_URL}/place-order`,
+                orderData
+              );
+
+              if (res.data.billUrl) {
+                newTab.location = res.data.billUrl;
+              }
+            }
+
+            else {
               alert("Payment verification failed");
             }
           } catch {
@@ -163,20 +191,20 @@ export default function Checkout() {
       );
 
       console.log(res.data);
-        window.open(res.data.billUrl, "_blank");
+      window.open(res.data.billUrl, "_blank");
 
       alert("Order placed successfully");
 
       /* 🔥 FIXED BILL OPEN (ONLY CHANGE) */
       // if (res.data.billUrl) {
-        // window.open(res.data.billUrl, "_blank");
+      // window.open(res.data.billUrl, "_blank");
       // }
       localStorage.removeItem("cartItems");
       setCartItems([]);
 
       /* CLEAR CART */
       navigate("/");
-      // window.location.reload();
+      window.location.reload();
 
     } catch (error) {
       console.log(error);
