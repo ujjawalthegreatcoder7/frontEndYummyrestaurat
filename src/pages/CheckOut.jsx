@@ -1,3 +1,4 @@
+
 import { useContext, useState, useEffect } from "react";
 import { CartContext } from "../Context/context";
 import axios from "axios";
@@ -166,21 +167,19 @@ export default function Checkout() {
       alert("Order placed successfully");
 
       /* 🔥 FIXED BILL OPEN (ONLY CHANGE) */
-      if (res.data.billUrl) {
+      // if (res.data.billUrl) {
         window.open(res.data.billUrl, "_blank");
-
-        // return;
-      }
+      // }
 
       /* CLEAR CART */
       navigate("/");
-      window.location.reload();
+      // window.location.reload();
       localStorage.removeItem("cartItems");
       setCartItems([]);
+
     } catch (error) {
- console.log("FULL RESPONSE:", JSON.stringify(res.data, null, 2));
-alert(JSON.stringify(res.data));
-}
+      console.log(error);
+    }
   };
 
   /* ================= SUBMIT ================= */
