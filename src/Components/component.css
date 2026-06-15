@@ -130,6 +130,10 @@
   flex: 1;
   overflow: hidden;
 }
+.forlogoo{
+  height : 4rem;
+  padding: .2rem;
+}
 
 .navbar-links a {
   text-decoration: none;

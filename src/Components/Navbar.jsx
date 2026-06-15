@@ -15,7 +15,9 @@ export default function Navbar() {
     <nav className="navbar">
       {/* Logo */}
       <div className="navbar-logo">
-        <Link to="/">Yummy.</Link>
+        <Link to="/"> 
+        <img className="forlogoo" src="logo.jpg" />
+         </Link>
       </div>
 
       {/* Navigation Links */}

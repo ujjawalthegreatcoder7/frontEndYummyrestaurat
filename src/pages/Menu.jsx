@@ -11,6 +11,8 @@ import CartSkeleton from "./skeleton";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
+import { useNavigate } from "react-router-dom";
+
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -34,11 +36,20 @@ export default function Menu() {
   const [value, setValue] = useState(0);
   const [menuItems, setMenuItems] = useState([]);
 
+
+
   /* ✅ FLASH STATE */
   const [flashMsg, setFlashMsg] = useState("");
   const [timer, setTimer] = useState(null);
 
-  const { addToCart } = useContext(CartContext);
+  // const { addToCart } = useContext(CartContext);
+  const { addToCart, cartItems } = useContext(CartContext);
+  const navigate = useNavigate();
+
+  const totalItems = cartItems.reduce(
+  (total, item) => total + item.quantity,
+  0
+);
 
   useEffect(() => {
     axios
@@ -66,13 +77,13 @@ export default function Menu() {
       AOS.refresh();
     }, 100);
   };
-  const categories = ["Chinese", "Main Course", "Beverages", "Desserts"];
+  const categories = ["southindian", "Chinese", "Main Course", "Beverages", "Desserts"];
 
   const filterItems = (category) => {
     switch (category) {
       case "Chinese":
         return menuItems.filter((item) =>
-          ["Pizza", "Burger", "Pasta", "Starters", "Chinese"].includes(item.category)
+          ["Pizza", "Burger", "Pasta", "Starters"].includes(item.category)
         );
 
       case "Main Course":
@@ -80,6 +91,10 @@ export default function Menu() {
           ["Main Course", "Salads"].includes(item.category)
         );
 
+      case "southindian":
+        return menuItems.filter((item) =>
+          ["southindian"].includes(item.category)
+        );
       case "Beverages":
         return menuItems.filter((item) =>
           ["Beverages"].includes(item.category)
@@ -180,6 +195,15 @@ export default function Menu() {
           </TabPanel>
         ))}
       </Box>
+
+      {totalItems > 0 && (
+        <button
+          className="place-order-btn"
+          onClick={() => navigate("/cart")}
+        >
+          🛒 Place Order ({totalItems})
+        </button>
+      )}
     </div>
   );
 }

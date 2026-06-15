@@ -466,111 +466,226 @@
 
 }
 
+/* =========================
+   MENU GRID
+========================= */
+
 .menu-grid {
   display: flex;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 2rem;
-  justify-content: center;
-  align-items: stretch;
   flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  padding: 20px;
 }
-/* CARD */
+
+/* =========================
+   MENU CARD
+========================= */
+
 .menu-card {
-  background: white;
-  border-radius: 16px;
-  padding: 14px;
-  
+  width: 280px;
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: all 0.35s ease;
   text-align: center;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-  transition: 0.3s;
+  padding-bottom: 18px;
 }
 
 .menu-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-10px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.15);
 }
 
-/* IMAGE */
+/* =========================
+   IMAGE
+========================= */
+
 .menu-img {
   width: 100%;
-  height: 180px;
+  height: 220px;
   object-fit: cover;
-  border-radius: 12px;
+  transition: transform 0.4s ease;
 }
 
-/* TEXT */
+.menu-card:hover .menu-img {
+  transform: scale(1.05);
+}
+
+/* =========================
+   TEXT
+========================= */
+
 .menu-card h3 {
-  font-size: 18px;
+  margin-top: 16px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #222;
+}
+
+.menu-card p {
+  padding: 0 16px;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .price {
-  color: #f97316;
+  margin-top: 12px;
+  font-size: 24px;
   font-weight: 800;
+  color: #f97316;
 }
-
-/* BUTTON */
-.add-cart-btn {
-  background: #f97316;
-  color: rgb(0, 0, 0);
-  border: none;
-  padding: 10px 18px;
-  border-radius: 50px;
-  cursor: pointer;
-}
-
 
 /* =========================
-   🔥 MOBILE FIX - BOTTOM NAV BAR
+   ADD TO CART BUTTON
+========================= */
+
+.add-cart-btn {
+  margin-top: 14px;
+  background: linear-gradient(
+    135deg,
+    #f97316,
+    #ea580c
+  );
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-cart-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(249, 115, 22, 0.35);
+}
+
+/* =========================
+   FLOATING PLACE ORDER BTN
+========================= */
+
+.place-order-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 25px;
+  z-index: 9999;
+
+  background: linear-gradient(
+    135deg,
+    #16a34a,
+    #15803d
+  );
+
+  color: white;
+  border: none;
+  padding: 15px 28px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+
+  box-shadow: 0 10px 25px rgba(22, 163, 74, 0.35);
+  transition: all 0.3s ease;
+}
+
+.place-order-btn:hover {
+  transform: translateY(-3px);
+}
+
+/* =========================
+   MOBILE DESIGN
 ========================= */
 
 @media (max-width: 768px) {
 
-  .menu-page .MuiBox-root {
-    flex-direction: column;
+  .menu-grid {
+    gap: 18px;
+    padding: 12px;
   }
 
-  /* 🔥 FIXED BOTTOM TAB BAR */
+  .menu-card {
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .menu-img {
+    height: 200px;
+  }
+
+  .menu-card h3 {
+    font-size: 20px;
+  }
+
+  /* Bottom Navigation */
+
   .MuiTabs-root {
-    position: fixed;   
+    position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     z-index: 9999;
 
-    display: flex !important;
-    flex-direction: row !important;
-    justify-content: space-around;
-
-    background: #111827;
-    padding: 6px 0;
-    border-top: 1px solid rgba(255,255,255,0.1);
+    background: #ffffff !important;
+    border-top: 1.5px solid #5a71a1;
 
     overflow-x: auto;
+    white-space: nowrap;
+
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+  }
+
+  .MuiTabs-flexContainer {
+    flex-direction: row !important;
+    justify-content: space-between;
   }
 
   .MuiTab-root {
-    min-width: 100% !important;
-    font-size: 11px !important;
-    display: flex;
-    padding: 8px 6px !important;
-    color: rgb(0, 0, 0) !important;
-    text-align: center !important;
+    min-width: 110px !important;
+    color: #444 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
   }
 
   .Mui-selected {
-    background: #f97316 !important;
-    border-radius: 8px;
+    color: #ffffff !important;
   }
 
-  /* CONTENT SPACE FOR FIXED BAR */
-  .menu-tab-panel {
-    padding-bottom: 100px; /* IMPORTANT SPACE */
-  }
+  .menu-page {
+    padding-bottom: 100px;
+    width: 100%;
 
-  .menu-img {
-    height: 150px;
   }
+.MuiTabs-flexContainer {
+  display: flex !important;
+  /* width: 6000%; */
 }
 
+.MuiTab-root {
+  flex: 1 !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+}
+
+
+.MuiTab-root.Mui-selected {
+  background: #f97316 !important;
+  color: white !important;
+  border-radius: 10px !important;
+  margin: 4px;
+  /* width: 100%; */
+}
+  .place-order-btn {
+    right: 15px;
+    bottom: 75px;
+    padding: 13px 22px;
+    font-size: 14px;
+  }
+}
 /* Add To Cart Button Premium Click Effect */
 .add-cart-btn {
   background: linear-gradient(135deg, #ff4d4d, #e60023);
@@ -590,8 +705,8 @@
 /* Hover Effect */
 .add-cart-btn:hover {
   transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 10px 22px rgba(230, 0, 35, 0.45);
-  background: linear-gradient(135deg, #ff6666, #cc001f);
+  box-shadow: 0 10px 22px rgba(22, 255, 197, 0.5);
+  background: linear-gradient(135deg, #ff5454, #cc001f);
 }
 
 /* Click Effect */
@@ -646,7 +761,7 @@
   text-align: center;
   font-size: 2.7rem;
   font-weight: 800;
-  color: #b22222;
+  color: #efc9c9;
   margin-bottom: 30px;
   letter-spacing: 1px;
   position: relative;
@@ -923,4 +1038,26 @@
     opacity: 1;
     transform: translate(-50%, 0);
   }
+}
+
+
+.place-order-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #ff5722;
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
+}
+
+.place-order-btn:hover {
+  transform: translateY(-2px);
 }
