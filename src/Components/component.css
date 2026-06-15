@@ -282,3 +282,10 @@
     font-size: 0.6rem;
   }
 }
+@media (max-width: 768px) {
+
+  .custom-footer {
+    margin-bottom: 150px;
+  }
+
+}
