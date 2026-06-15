@@ -193,7 +193,7 @@ export default function Menu() {
             <Tab key={index} label={category} />
           ))}
         </Tabs>
-        z
+        
         {categories.map((category, index) => (
           <TabPanel key={index} value={value} index={index}>
             {renderMenuItems(filterItems(category))}
