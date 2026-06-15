@@ -204,8 +204,9 @@ export default function Menu() {
       {totalItems > 0 && (
         <button
           className="place-order-btn"
-          onClick={() => navigate("/cart")}
-        >
+onClick={() => {
+  window.location.href = "/cart";
+}}        >
           🛒 Place Order ({totalItems})
         </button>
       )}
