@@ -47,9 +47,9 @@ export default function Menu() {
   const navigate = useNavigate();
 
   const totalItems = cartItems.reduce(
-  (total, item) => total + item.quantity,
-  0
-);
+    (total, item) => total + item.quantity,
+    0
+  );
 
   useEffect(() => {
     axios
@@ -129,7 +129,8 @@ export default function Menu() {
         items.map((item, index) => (
           <div
             key={item._id}
-            className="menu-card"
+            className={`menu-card ${!item.available ? "unavailable-card" : ""
+              }`}
             data-aos="zoom-in-up"
             data-aos-delay={index * 100}
           >
@@ -140,13 +141,17 @@ export default function Menu() {
             <p className="price">₹{item.price}</p>
 
             <button
-              className="add-cart-btn"
+              className={`add-cart-btn ${!item.available ? "disabled-btn" : ""
+                }`}
+              disabled={!item.available}
               onClick={() => {
+                if (!item.available) return;
+
                 addToCart(item);
                 showFlash("Added to cart successfully!");
               }}
             >
-              Add to Cart
+              {item.available ? "Add to Cart" : "Out of Stock"}
             </button>
           </div>
         ))
@@ -188,7 +193,7 @@ export default function Menu() {
             <Tab key={index} label={category} />
           ))}
         </Tabs>
-
+        z
         {categories.map((category, index) => (
           <TabPanel key={index} value={value} index={index}>
             {renderMenuItems(filterItems(category))}
