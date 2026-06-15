@@ -284,8 +284,7 @@
 }
 @media (max-width: 768px) {
 
-  .custom-footer {
-    margin-bottom: 160px;
+  .footer-bottom{
+        margin-bottom: 250px;
   }
-
 }

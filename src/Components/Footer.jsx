@@ -51,7 +51,7 @@ const Footer = () => {
 
   <div className="footer-bottom">
     <p>© Copyright <strong>Yummy</strong> All Rights Reserved</p>
-    <p>
+    <p className="des" >
       Designed by <span>UJJAWAL ARORA</span>
     </p>
   </div>
