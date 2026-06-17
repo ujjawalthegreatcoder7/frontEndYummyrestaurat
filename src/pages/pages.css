@@ -1077,3 +1077,36 @@
   filter: grayscale(100%);
 }
 
+.south-loading{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:20px;
+}
+
+.loading-food{
+  width:180px;
+  animation:spin 2s linear infinite;
+}
+
+@keyframes spin{
+  from{
+    transform:rotate(0deg);
+  }
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+.south-loading h2{
+  margin-top:20px;
+  color:#ff6b00;
+}
+
+.south-loading p{
+  font-size:18px;
+  line-height:1.8;
+}
