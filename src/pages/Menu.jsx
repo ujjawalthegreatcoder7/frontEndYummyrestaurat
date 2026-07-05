@@ -67,7 +67,7 @@ export default function Menu() {
   }, []);
   const handleChange = (event, newValue) => {
     setValue(newValue);
-
+ 
     window.scrollTo({
       top: 0,
       behavior: "smooth",

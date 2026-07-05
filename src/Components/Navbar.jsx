@@ -9,14 +9,14 @@ export default function Navbar() {
   const totalItems = cartItems.reduce(
     (total, item) => total + item.quantity,
     0
-  );
+  ); 
 
   return (
     <nav className="navbar">
       {/* Logo */}
       <div className="navbar-logo">
         <Link to="/"> 
-        <img className="forlogoo" src="logo.jpg" />
+        <img className="forlogoo" src="logo.png" />
          </Link>
       </div>
 
@@ -25,7 +25,6 @@ export default function Navbar() {
         <Link to="/">Home</Link>
         <Link to="/menu">Menu</Link>
         <Link to="/details">Details</Link>
-        <Link to="/Admin">Admin</Link>
       </div>
 
       {/* Cart */}
