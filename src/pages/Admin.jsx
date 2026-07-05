@@ -195,7 +195,7 @@ const toggleFood = async (id) => {
     <button
       onClick={() =>
         window.location.href =
-          "/FoodAvailability"
+          "/Availability"
       }
       style={{
         background: "#ffbd06",
