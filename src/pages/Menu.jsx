@@ -64,7 +64,7 @@ export default function Menu() {
       once: true,
       offset: 50,
     });
-  }, []);
+  }, []); 
   const handleChange = (event, newValue) => {
     setValue(newValue);
  
@@ -77,32 +77,39 @@ export default function Menu() {
       AOS.refresh();
     }, 100);
   };
-  const categories = ["southindian", "Chinese", "Main Course", "Beverages", "Desserts"];
+
+  const categories = ["lamps", "purse", "clock", "pots", "bed"];
 
   const filterItems = (category) => {
     switch (category) {
-      case "Chinese":
+      case "lamps":
         return menuItems.filter((item) =>
-          ["Pizza", "Burger", "Pasta", "Starters"].includes(item.category)
+          ["lamps"].includes(item.category)
         );
 
-      case "Main Course":
+
+      case "bed":
         return menuItems.filter((item) =>
-          ["Main Course", "Salads"].includes(item.category)
+          ["bed"].includes(item.category)
         );
 
-      case "southindian":
+      case "clock":
         return menuItems.filter((item) =>
-          ["southindian"].includes(item.category)
+          ["clock"].includes(item.category)
         );
+      case "pots":
+        return menuItems.filter((item) =>
+          ["pots"].includes(item.category)
+        );
+
       case "Beverages":
         return menuItems.filter((item) =>
           ["Beverages"].includes(item.category)
         );
 
-      case "Desserts":
+      case "purse":
         return menuItems.filter((item) =>
-          ["Desserts"].includes(item.category)
+          ["purse"].includes(item.category)
         );
 
       default:
@@ -171,8 +178,8 @@ export default function Menu() {
       )}
 
       <div className="menu-header">
-        <p className="menu-subtitle">Our Delicious Menu</p>
-        <h1 className="menu-title">Choose Your Favorite Dish</h1>
+        <p className="menu-subtitle">Our Signature Collection</p>
+        <h1 className="menu-title">Choose Your Light That Speaks Your Style </h1>
       </div>
 
       <Box sx={{
