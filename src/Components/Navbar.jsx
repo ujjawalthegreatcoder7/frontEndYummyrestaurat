@@ -23,7 +23,7 @@ export default function Navbar() {
       {/* Navigation Links */}
       <div className="navbar-links">
         <Link to="/">Home</Link>
-        <Link to="/menu">Menuu</Link>
+        <Link to="/menu">Menu</Link>
         <Link to="/details">Details</Link>
       </div>
 
