@@ -8,6 +8,9 @@ import Navbar from "./Components/Navbar";
 import Checkout from "./pages/CheckOut";
 import Admin from "./pages/Admin";
 import Availability from "./pages/Availability";
+import ProductDetails from "./pages/ProductDetails";
+
+
 // import FoodAvailabilityControl from "./pages/FoodAvailabilityControl";
 
 function App() {
@@ -22,6 +25,10 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/Menu" element={<Menu />} />
           <Route path="/Cart" element={<Cart />} />
+
+  <Route path="/product/:id" element={<ProductDetails />} />
+
+
           <Route path="/details" element={<details />} />
           <Route path="/CheckOut" element={<Checkout />} />
           <Route path="/Admin" element={<Admin />} />

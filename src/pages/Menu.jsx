@@ -140,6 +140,10 @@ export default function Menu() {
               }`}
             data-aos="zoom-in-up"
             data-aos-delay={index * 100}
+
+onClick={() => navigate(`/product/${item._id}`)}
+style={{ cursor: "pointer" }}
+
           >
             <img src={item.image} alt={item.name} className="menu-img" />
 
@@ -152,6 +156,10 @@ export default function Menu() {
                 }`}
               disabled={!item.available}
               onClick={() => {
+
+    e.stopPropagation();
+
+
                 if (!item.available) return;
 
                 addToCart(item);
@@ -179,7 +187,7 @@ export default function Menu() {
 
       <div className="menu-header">
         <p className="menu-subtitle">Our Signature Collection</p>
-        <h1 className="menu-title">Choose Your Light That Speaks Your Style </h1>
+        <h1 className="menu-title">Bring Home the Art of 3D Design</h1>
       </div>
 
       <Box sx={{

@@ -9,6 +9,16 @@
     padding:30px;
 }
 
+.menu-img {
+  width: 70% !important;
+  height: 100%;
+  object-fit: contain;
+  background: #ffffff;
+  /* padding: 12px; */
+  /* border-radius: 12px; */
+  transition: transform 0.3s ease;
+}
+
 .lamp-img{
     width:450px;
     max-width:100%;
