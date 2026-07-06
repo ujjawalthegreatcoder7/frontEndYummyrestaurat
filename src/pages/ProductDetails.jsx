@@ -4,6 +4,7 @@ import axios from "axios";
 import { CartContext } from "../Context/context";
 import "./productdetail.css"
 import Skeleton from "@mui/material/Skeleton";
+import CartSkeleton from "./skeleton";
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -15,12 +16,17 @@ export default function ProductDetails() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+
     axios
       .get(`https://final-restaurant-backend-1.onrender.com/menu/${id}`)
       .then((res) => {
         setProduct(res.data);
         setLoading(false);
-      })
+})
       .catch((err) => {
         console.log(err);
         setLoading(false);
@@ -30,9 +36,9 @@ export default function ProductDetails() {
   if (loading) {
     return (
       <div className="product-page">
-        {/* <h2>Loading your design...</h2> */}
+        <h2>Loading your design...</h2>
 
-        <Skeleton/>
+        <CartSkeleton/>
 
       </div>
     );
@@ -53,13 +59,39 @@ export default function ProductDetails() {
     <div className="product-page">
 
       {/* LEFT SIDE IMAGE */}
-      <div className="product-image-section">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="product-main-image"
-        />
-      </div>
+<div className="product-image-section">
+
+  <div className="image-slider">
+
+    {
+      [
+        product.image,
+        product.image,
+        product.image,
+        product.image,
+        product.image,
+        product.image
+      ].map((img, index) => (
+
+        <div 
+          className="image-card"
+          key={index}
+        >
+
+          <img
+            src={img}
+            alt={`${product.name}-${index}`}
+            className="product-main-image"
+          />
+
+        </div>
+
+      ))
+    }
+
+  </div>
+
+</div>
 
       {/* RIGHT SIDE DETAILS */}
       <div className="product-info-section">

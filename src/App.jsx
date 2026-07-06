@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useContext } from "react";
 
 import Home from "./pages/Home";
 import Footer from "./Components/Footer";
@@ -10,10 +11,23 @@ import Admin from "./pages/Admin";
 import Availability from "./pages/Availability";
 import ProductDetails from "./pages/ProductDetails";
 
+import { CartContext } from "./Context/context";
+
 
 // import FoodAvailabilityControl from "./pages/FoodAvailabilityControl";
 
+
 function App() {
+
+  const { cartItems } = useContext(CartContext);
+
+
+  const totalItems = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
+
+
   return (
     <BrowserRouter>
 
@@ -21,24 +35,53 @@ function App() {
 
         <Navbar />
 
+
+        {/* GLOBAL CART BUTTON */}
+        {totalItems > 0 && (
+          <button
+            className="place-order-btn"
+            onClick={() => {
+              window.location.href = "/Cart";
+            }}
+          >
+            🛒 Place Order ({totalItems})
+          </button>
+        )}
+
+
+
         <Routes>
+
           <Route path="/" element={<Home />} />
+
           <Route path="/Menu" element={<Menu />} />
+
           <Route path="/Cart" element={<Cart />} />
 
-  <Route path="/product/:id" element={<ProductDetails />} />
+          {/* <Route path="/details" element={<Footer />} /> */}
 
 
-          <Route path="/details" element={<details />} />
+          <Route 
+            path="/product/:id" 
+            element={<ProductDetails />} 
+          />
+
+
           <Route path="/CheckOut" element={<Checkout />} />
+
           <Route path="/Admin" element={<Admin />} />
+
+
           <Route
             path="/Availability"
             element={<Availability />}
           />
 
-          <Route path="*" element={<Home />} />
+
+          {/* <Route path="*" element={<Home />} /> */}
+
         </Routes>
+
 
         <Footer />
 
